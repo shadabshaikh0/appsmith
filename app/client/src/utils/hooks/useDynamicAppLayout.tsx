@@ -1,11 +1,18 @@
+import { updateWidgetPropertyRequest } from "actions/controlActions";
 import { theme } from "constants/DefaultTheme";
 import { ReduxActionTypes } from "constants/ReduxActionConstants";
+import {
+  GridDefaults,
+  MAIN_CONTAINER_WIDGET_ID,
+  RenderModes,
+} from "constants/WidgetConstants";
+import { nextAvailableRowInContainer } from "entities/Widget/utils";
 import { debounce } from "lodash";
 import { AppsmithDefaultLayout } from "pages/Editor/MainContainerLayoutControl";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "reducers";
-import { getWidget } from "sagas/selectors";
+import { getWidget, getWidgets } from "sagas/selectors";
 import { getAppMode } from "selectors/applicationSelectors";
 import {
   getCurrentApplicationLayout,
@@ -14,10 +21,11 @@ import {
 import { useWindowSizeHooks } from "./dragResizeHooks";
 
 export const useDynamicAppLayout = () => {
-  const { width: screenWidth } = useWindowSizeHooks();
+  const { width: screenWidth, height: screenHeight } = useWindowSizeHooks();
   const mainContainer = useSelector((state: AppState) => getWidget(state, "0"));
   const currentPageId = useSelector(getCurrentPageId);
   const appMode = useSelector(getAppMode);
+  const canvasWidgets = useSelector(getWidgets);
   const appLayout = useSelector(getCurrentApplicationLayout);
   const dispatch = useDispatch();
 
@@ -60,6 +68,30 @@ export const useDynamicAppLayout = () => {
   const debouncedResize = useCallback(debounce(resizeToLayout, 250), [
     mainContainer,
   ]);
+
+  useEffect(() => {
+    if (appMode === "EDIT") {
+      const nextAvailableRow = nextAvailableRowInContainer(
+        MAIN_CONTAINER_WIDGET_ID,
+        canvasWidgets,
+      );
+      const gridRowHeight = GridDefaults.DEFAULT_GRID_ROW_HEIGHT;
+      const calculatedCanvasHeight = nextAvailableRow * gridRowHeight;
+      if (calculatedCanvasHeight < screenHeight) {
+        const buffer = gridRowHeight;
+        const calculatedMinHeight =
+          Math.floor((screenHeight - buffer) / gridRowHeight) * gridRowHeight;
+        dispatch(
+          updateWidgetPropertyRequest(
+            MAIN_CONTAINER_WIDGET_ID,
+            "minHeight",
+            calculatedMinHeight,
+            RenderModes.CANVAS,
+          ),
+        );
+      }
+    }
+  }, [currentPageId]);
 
   useEffect(() => {
     debouncedResize(screenWidth, appLayout);
