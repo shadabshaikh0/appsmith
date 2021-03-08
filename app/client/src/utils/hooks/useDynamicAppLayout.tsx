@@ -77,10 +77,13 @@ export const useDynamicAppLayout = () => {
       );
       const gridRowHeight = GridDefaults.DEFAULT_GRID_ROW_HEIGHT;
       const calculatedCanvasHeight = nextAvailableRow * gridRowHeight;
-      if (calculatedCanvasHeight < screenHeight) {
-        const buffer = gridRowHeight;
-        const calculatedMinHeight =
-          Math.floor((screenHeight - buffer) / gridRowHeight) * gridRowHeight;
+      const buffer = gridRowHeight;
+      const calculatedMinHeight =
+        Math.floor((screenHeight - buffer) / gridRowHeight) * gridRowHeight;
+      if (
+        calculatedCanvasHeight < screenHeight &&
+        calculatedMinHeight !== mainContainer.minHeight
+      ) {
         dispatch(
           updateWidgetPropertyRequest(
             MAIN_CONTAINER_WIDGET_ID,
