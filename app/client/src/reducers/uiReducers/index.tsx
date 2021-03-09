@@ -25,6 +25,7 @@ import pageCanvasStructureReducer from "./pageCanvasStructure";
 import pageWidgetsReducer from "./pageWidgetsReducer";
 import onBoardingReducer from "./onBoardingReducer";
 import releasesReducer from "./releasesReducer";
+import commentsReducer from "./commentsReducer";
 
 const uiReducer = combineReducers({
   widgetSidebar: widgetSidebarReducer,
@@ -53,5 +54,6 @@ const uiReducer = combineReducers({
   confirmRunAction: confirmRunActionReducer,
   onBoarding: onBoardingReducer,
   releases: releasesReducer,
+  comments: commentsReducer,
 });
 export default uiReducer;

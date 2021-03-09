@@ -36,6 +36,7 @@ import { getDefaultPageId } from "./selectors";
 import { populatePageDSLsSaga } from "./PageSagas";
 import log from "loglevel";
 import * as Sentry from "@sentry/react";
+import { initComments } from "actions/commentActions";
 
 function* initializeEditorSaga(
   initializeEditorAction: ReduxAction<InitializeEditorPayload>,
@@ -206,6 +207,9 @@ export function* initializeAppViewerSaga(
 
     yield put(setAppMode(APP_MODE.PUBLISHED));
     yield put(updateAppStore(getAppStore(applicationId)));
+
+    // todo remove (for dev)
+    yield put(initComments());
 
     yield put({
       type: ReduxActionTypes.INITIALIZE_PAGE_VIEWER_SUCCESS,

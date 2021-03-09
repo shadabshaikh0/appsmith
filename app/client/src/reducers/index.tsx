@@ -40,6 +40,7 @@ import { PageWidgetsReduxState } from "./uiReducers/pageWidgetsReducer";
 import { OnboardingState } from "./uiReducers/onBoardingReducer";
 import { ReleasesState } from "./uiReducers/releasesReducer";
 import { LoadingEntitiesState } from "./evaluationReducers/loadingEntitiesReducer";
+import { CommentsReduxState } from "./uiReducers/commentsReducer";
 
 const appReducer = combineReducers({
   entities: entityReducer,
@@ -78,6 +79,7 @@ export interface AppState {
     theme: ThemeState;
     onBoarding: OnboardingState;
     releases: ReleasesState;
+    comments: CommentsReduxState;
   };
   entities: {
     canvasWidgets: CanvasWidgetsReduxState;

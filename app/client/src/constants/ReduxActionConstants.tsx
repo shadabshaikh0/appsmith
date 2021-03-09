@@ -4,6 +4,9 @@ import { Org } from "./orgConstants";
 import { ERROR_CODES } from "constants/ApiConstants";
 
 export const ReduxActionTypes: { [key: string]: string } = {
+  SET_COMMENTS_SUCCESS: "SET_COMMENTS_SUCCESS", // todo remove (for dev)
+  SET_COMMENTS_REQUEST: "SET_COMMENTS_REQUEST", // todo remove (for dev)
+  INIT_COMMENTS: "INIT_COMMENTS", // todo remove (for dev)
   INITIALIZE_EDITOR: "INITIALIZE_EDITOR",
   INITIALIZE_EDITOR_SUCCESS: "INITIALIZE_EDITOR_SUCCESS",
   REPORT_ERROR: "REPORT_ERROR",

@@ -41,6 +41,7 @@ import Welcome from "./Welcome";
 import { getThemeDetails, ThemeMode } from "selectors/themeSelectors";
 import { ThemeProvider } from "styled-components";
 import { Theme } from "constants/DefaultTheme";
+import { initComments } from "actions/commentActions";
 
 type EditorProps = {
   currentApplicationId?: string;
@@ -59,6 +60,7 @@ type EditorProps = {
   user?: User;
   selectedWidget?: string;
   lightTheme: Theme;
+  initComments: () => void;
 };
 
 type Props = EditorProps & RouteComponentProps<BuilderRouteParams>;
@@ -173,6 +175,9 @@ class Editor extends Component<Props> {
     if (applicationId && pageId) {
       this.props.initEditor(applicationId, pageId);
     }
+
+    // todo remove (for dev)
+    this.props.initComments();
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: { registered: boolean }) {
@@ -246,6 +251,7 @@ const mapDispatchToProps = (dispatch: any) => {
     pasteCopiedWidget: () => dispatch(pasteWidget()),
     deleteSelectedWidget: () => dispatch(deleteSelectedWidget(true)),
     cutSelectedWidget: () => dispatch(cutWidget()),
+    initComments: () => dispatch(initComments()), // todo remove (for dev)
   };
 };
 

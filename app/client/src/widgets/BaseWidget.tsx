@@ -34,6 +34,7 @@ import {
   WidgetEvaluatedProps,
 } from "../utils/DynamicBindingUtils";
 import { BatchPropertyUpdatePayload } from "actions/controlActions";
+import OverlayCommentsWrapper from "components/ads/Comments/OverlayCommentsWrapper";
 
 /***
  * BaseWidget
@@ -218,6 +219,21 @@ abstract class BaseWidget<
     return <ErrorBoundary>{content}</ErrorBoundary>;
   }
 
+  /**
+   * These comments are rendered using position: absolute over the widget borders,
+   * they are not aware of the component structure.
+   * For additional component specific contexts, for eg.
+   * a comment bound to the scroll position or a specific section
+   * we would pass comments as props to the components
+   */
+  addOverlayComments(content: ReactNode) {
+    return (
+      <OverlayCommentsWrapper refId={this.props.widgetId}>
+        {content}
+      </OverlayCommentsWrapper>
+    );
+  }
+
   private getWidgetView(): ReactNode {
     let content: ReactNode;
     switch (this.props.renderMode) {
@@ -227,6 +243,7 @@ abstract class BaseWidget<
           content = this.makeResizable(content);
           content = this.showWidgetName(content);
           content = this.makeDraggable(content);
+          content = this.addOverlayComments(content);
           content = this.makePositioned(content);
         }
         return content;
@@ -235,6 +252,7 @@ abstract class BaseWidget<
       case RenderModes.PAGE:
         content = this.getPageView();
         if (this.props.isVisible) {
+          content = this.addOverlayComments(content);
           content = this.addErrorBoundary(content);
           if (!this.props.detachFromLayout) {
             content = this.makePositioned(content);
