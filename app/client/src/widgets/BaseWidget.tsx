@@ -239,11 +239,11 @@ abstract class BaseWidget<
     switch (this.props.renderMode) {
       case RenderModes.CANVAS:
         content = this.getCanvasView();
+        content = this.addOverlayComments(content);
         if (!this.props.detachFromLayout) {
           content = this.makeResizable(content);
           content = this.showWidgetName(content);
           content = this.makeDraggable(content);
-          content = this.addOverlayComments(content);
           content = this.makePositioned(content);
         }
         return content;

@@ -1,19 +1,35 @@
+import { CommentThread } from "reducers/uiReducers/commentsReducer";
+
 export const reduceCommentsByRef = (comments: any[]) => {
   return comments.reduce((res, curr) => {
     return {
-      commentsMap: {
-        ...res.commentsMap,
+      commentThreadsMap: {
+        ...res.commentThreadsMap,
         [curr.id]: curr,
       },
-      refComments: {
-        ...(res.refComments ? res.refComments : {}),
+      refCommentThreads: {
+        ...(res.refCommentThreads ? res.refCommentThreads : {}),
         [curr.refId]: [
-          ...(res.refComments && res.refComments[curr.refId]
-            ? res.refComments[curr.refId]
+          ...(res.refCommentThreads && res.refCommentThreads[curr.refId]
+            ? res.refCommentThreads[curr.refId]
             : []),
           curr.id,
         ],
       },
     };
   }, {});
+};
+
+export const transformPublishedCommentActionPayload = (
+  payload: any,
+): Record<string, CommentThread> => {
+  return {
+    [payload.refId]: {
+      ...payload,
+      meta: {
+        position: payload.position,
+      },
+      id: "UNPUBLISHED",
+    },
+  };
 };

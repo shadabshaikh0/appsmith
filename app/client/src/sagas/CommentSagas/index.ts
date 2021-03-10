@@ -1,4 +1,4 @@
-import { ReduxActionTypes } from "constants/ReduxActionConstants";
+import { ReduxAction, ReduxActionTypes } from "constants/ReduxActionConstants";
 import {
   put,
   takeLatest,
@@ -15,9 +15,13 @@ import {
   COMMENT_EVENTS,
 } from "constants/CommentConstants";
 import handleCommentEvents from "./handleCommentEvents";
-import { commentEvent } from "actions/commentActions";
+import {
+  commentEvent,
+  createUnpublishedCommentThreadSuccess,
+} from "actions/commentActions";
+import { transformPublishedCommentActionPayload } from "components/ads/Comments/utils";
 
-export function* initComments() {
+export function* initCommentThreads() {
   try {
     yield race([
       take(ReduxActionTypes.INITIALIZE_EDITOR_SUCCESS),
@@ -43,9 +47,36 @@ function* watchCommentEvents() {
   }
 }
 
+function* createUnpublishedCommentThread(action: ReduxAction<any>) {
+  const transformedPayload = transformPublishedCommentActionPayload(
+    action.payload,
+  );
+  yield put(createUnpublishedCommentThreadSuccess(transformedPayload));
+}
+
+function* createCommentThread(action: ReduxAction<any>) {
+  console.log("createCommentThread", action);
+}
+
+function* addCommentToThread(action: ReduxAction<any>) {
+  console.log("addCommentToThread", action);
+}
+
 export default function* commentSagas() {
   yield all([
-    takeLatest(ReduxActionTypes.INIT_COMMENTS, initComments),
+    takeLatest(ReduxActionTypes.INIT_COMMENT_THREADS, initCommentThreads),
+    takeLatest(
+      ReduxActionTypes.CREATE_UNPUBLISHED_COMMENT_THREAD_REQUEST,
+      createUnpublishedCommentThread,
+    ),
+    takeLatest(
+      ReduxActionTypes.CREATE_COMMENT_THREAD_REQUEST,
+      createCommentThread,
+    ),
+    takeLatest(
+      ReduxActionTypes.ADD_COMMENT_TO_THREAD_REQUEST,
+      addCommentToThread,
+    ),
     call(watchCommentEvents),
   ]);
 }

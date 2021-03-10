@@ -244,7 +244,7 @@ export const DropTargetComponent = memo((props: DropTargetComponentProps) => {
       }
       showPropertyPane && showPropertyPane();
     }
-    e.stopPropagation();
+    // e.stopPropagation();
     e.preventDefault();
   };
   const height = canDropTargetExtend

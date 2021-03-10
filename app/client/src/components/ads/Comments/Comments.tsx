@@ -1,16 +1,32 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import InlineCommentTrigger from "./InlineCommentTrigger";
-import { refComments } from "./selectors";
+import UnpublishedCommentThread from "./UnpublishedCommentThread";
+import InlineCommentPin from "./InlineCommentPin";
+import {
+  refCommentThreadsSelector,
+  unpublishedCommentThreadSelector,
+} from "./selectors";
 
 const Comments = ({ refId }: { refId: string }) => {
-  const commentsIds = useSelector(refComments(refId));
+  const commentsThreadIds = useSelector(refCommentThreadsSelector(refId));
+  const unpublishedCommentThread = useSelector(
+    unpublishedCommentThreadSelector(refId),
+  );
   return (
     <>
-      {commentsIds &&
-        commentsIds.map((commentId: any) => (
-          <InlineCommentTrigger commentId={commentId} key={commentId} />
+      {commentsThreadIds &&
+        commentsThreadIds.map((commentsThreadId: any) => (
+          <InlineCommentPin
+            commentThreadId={commentsThreadId}
+            key={commentsThreadId}
+          />
         ))}
+      {unpublishedCommentThread && (
+        <UnpublishedCommentThread
+          refId={refId}
+          commentThread={unpublishedCommentThread}
+        />
+      )}
     </>
   );
 };
